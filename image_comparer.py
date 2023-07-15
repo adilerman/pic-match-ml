@@ -1,17 +1,13 @@
 import cv2
 import numpy as np
+from my_image import MyImage
 
 THRESHOLD = 22
 
 
-def show_img(img):
-    cv2.imshow('image', img)
-    cv2.waitKey(0)
-
-
 class ImageComparer:
     def __init__(self):
-        self.sift = cv2.SIFT_create()
+
         self.matcher = cv2.FlannBasedMatcher_create()
 
     @staticmethod
@@ -20,25 +16,21 @@ class ImageComparer:
         return gray
 
     def compare_images(self, img1, img2, print_matches=False):
-        img1_grey = ic.to_greyscale(img1)
-        img2_grey = ic.to_greyscale(img2)
-
-        # Detect keypoints and compute descriptors
-        keypoints1, descriptors1 = self.sift.detectAndCompute(img1_grey, None)
-        keypoints2, descriptors2 = self.sift.detectAndCompute(img2_grey, None)
         # Perform feature matching
-        good_matches = self.find_best_matching_keypoints(descriptors1, descriptors2)
-        fundamental_matrix, mask = self.create_fundamental_matrix(good_matches, keypoints1, keypoints2)
+        good_matches = self.find_best_matching_keypoints(img1.descriptors, img2.descriptors)
+        fundamental_matrix, mask = self.create_fundamental_matrix(good_matches, img1.keypoints, img2.keypoints)
         if mask is None:
             print("The images represent different objects.")
             return False
         inliers = np.sum(mask)
-        self.print_matching_points(print_matches, mask, good_matches, keypoints1, keypoints2)
+        self.print_matching_points(print_matches, mask, good_matches, img1.keypoints, img2.keypoints)
         # Compare number of inliers with threshold
         if inliers >= THRESHOLD:
             print("The images represent the same objects.")
+            return True
         else:
             print("The images represent different objects.")
+            return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
         matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
@@ -70,7 +62,6 @@ class ImageComparer:
 
 if __name__ == '__main__':
     ic = ImageComparer()
-    img1 = cv2.imread('data/images/3835-_flat.jpg')
-    img2 = cv2.imread('data/images/3836-_flat.jpg')
-    ic.compare_images(img1, img2, True)
-
+    img1 = MyImage('data/images/3835-_flat.jpg')
+    img2 = MyImage('data/images/3836-_flat.jpg')
+    ic.compare_images(img1, img2, print_matches=False)
