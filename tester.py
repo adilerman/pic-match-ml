@@ -27,6 +27,7 @@ def convert_webp_to_jpg(webp_path, jpg_path):
     image.save(jpg_path, "JPEG")
 
 
+# noinspection PyTypeChecker
 def preprocess_images():
     images = recursive_ls('./data/images/')
     for idx, image in enumerate(images):
@@ -47,7 +48,7 @@ def resize_images(image_paths, size, output_path):
         image = Image.open(image_path)
         resized_image = image.resize(size)
         folder_name = image_path.split('/')[-2]
-        os.makedirs(output_path + 'smaller/', exist_ok=True)
+        os.makedirs(output_path + f'{size}', exist_ok=True)
 
         resized_image.save(output_path + 'smaller/' + os.path.basename(image_path))
 
@@ -60,7 +61,7 @@ def score_folder(folder_path):
     for img1_path, img2_path in image_pairs:
         img1 = MyImage(img1_path)
         img2 = MyImage(img2_path)
-        is_matching = image_comparer.compare_images(img1, img2)
+        is_matching = image_comparer.compare_images(img1, img2,True)
         matches.append(is_matching)
 
     print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
@@ -71,7 +72,7 @@ def get_all_pairs(lst):
 
 
 #
-# score_folder('./data/images/smaller/')
-image_paths = recursive_ls('./data/images/eiffel')
+# score_folder('./data/images/original/big_ben/')
+image_paths = recursive_ls('./data/images/original/')
 
 resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')

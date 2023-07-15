@@ -22,9 +22,9 @@ class ImageComparer:
             # print("The images represent different objects.")
             return False
         inliers = np.sum(mask)
-        self.print_matching_points(print_matches, mask, good_matches, img1.keypoints, img2.keypoints)
         # Compare number of inliers with threshold
         if inliers >= THRESHOLD:
+            self.print_matching_points(img1.img, img2.img, print_matches, mask, good_matches, img1.keypoints, img2.keypoints)
             # print("The images represent the same objects.")
             return True
         else:
@@ -50,7 +50,7 @@ class ImageComparer:
         return fundamental_matrix, mask
 
     @staticmethod
-    def print_matching_points(print_matches, mask, good_matches, keypoints1, keypoints2):
+    def print_matching_points(img1, img2, print_matches, mask, good_matches, keypoints1, keypoints2):
         if print_matches:
             draw_params = dict(matchColor=(0, 0, 255), singlePointColor=None, matchesMask=mask.flatten().tolist(), flags=2)
             match_img = cv2.drawMatches(img1, keypoints1, img2, keypoints2, good_matches, None, **draw_params)
