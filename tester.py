@@ -3,6 +3,7 @@ import shutil
 from PIL import Image
 from image_comparer import ImageComparer
 from my_image import MyImage
+from common.image_resizer import ImageResizer
 
 import itertools
 
@@ -61,7 +62,7 @@ def score_folder(folder_path):
     for img1_path, img2_path in image_pairs:
         img1 = MyImage(img1_path)
         img2 = MyImage(img2_path)
-        is_matching = image_comparer.compare_images(img1, img2,True)
+        is_matching = image_comparer.compare_images(img1, img2, False)
         matches.append(is_matching)
 
     print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
@@ -71,8 +72,9 @@ def get_all_pairs(lst):
     return list(itertools.combinations(lst, 2))
 
 
-#
-# score_folder('./data/images/original/big_ben/')
-image_paths = recursive_ls('./data/images/original/')
+# score_folder('./data/images/original/golden_gate/')
+# image_paths = recursive_ls('./data/images/original/')
+# resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')
 
-resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')
+image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
+image_resizer.resize_images()
