@@ -7,7 +7,6 @@ THRESHOLD = 22
 
 class ImageComparer:
     def __init__(self):
-
         self.matcher = cv2.FlannBasedMatcher_create()
 
     @staticmethod
@@ -20,16 +19,16 @@ class ImageComparer:
         good_matches = self.find_best_matching_keypoints(img1.descriptors, img2.descriptors)
         fundamental_matrix, mask = self.create_fundamental_matrix(good_matches, img1.keypoints, img2.keypoints)
         if mask is None:
-            print("The images represent different objects.")
+            # print("The images represent different objects.")
             return False
         inliers = np.sum(mask)
         self.print_matching_points(print_matches, mask, good_matches, img1.keypoints, img2.keypoints)
         # Compare number of inliers with threshold
         if inliers >= THRESHOLD:
-            print("The images represent the same objects.")
+            # print("The images represent the same objects.")
             return True
         else:
-            print("The images represent different objects.")
+            # print("The images represent different objects.")
             return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
@@ -62,6 +61,6 @@ class ImageComparer:
 
 if __name__ == '__main__':
     ic = ImageComparer()
-    img1 = MyImage('data/images/3835-_flat.jpg')
-    img2 = MyImage('data/images/3836-_flat.jpg')
+    img1 = MyImage('data/images/test/3835-_flat.jpg')
+    img2 = MyImage('data/images/test/3836-_flat.jpg')
     ic.compare_images(img1, img2, print_matches=False)
