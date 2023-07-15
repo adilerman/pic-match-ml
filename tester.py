@@ -74,4 +74,4 @@ def get_all_pairs(lst):
 # score_folder('./data/images/smaller/')
 image_paths = recursive_ls('./data/images/eiffel')
 
-resize_images(image_paths, size=(256, 256), output_path='./data/images/eiffel/')
+resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')
