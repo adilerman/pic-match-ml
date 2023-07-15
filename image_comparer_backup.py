@@ -19,9 +19,9 @@ class ImageComparer:
 
 if __name__ == '__main__':
     ic = ImageComparer()
-    img1 = cv2.imread('./data/images/3835-_flat.jpg')
+    img1 = cv2.imread('data/images/3835-_flat.jpg')
     img1_grey = ic.to_greyscale(img1)
-    img2 = cv2.imread('./data/images/3836-_flat.jpg')
+    img2 = cv2.imread('data/images/3836-_flat.jpg')
     # img2 = cv2.imread('./data/images/Ty2F3.png')
     img2_grey = ic.to_greyscale(img2)
 

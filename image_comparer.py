@@ -70,7 +70,7 @@ class ImageComparer:
 
 if __name__ == '__main__':
     ic = ImageComparer()
-    img1 = cv2.imread('./data/images/3835-_flat.jpg')
-    img2 = cv2.imread('./data/images/3836-_flat.jpg')
+    img1 = cv2.imread('data/images/3835-_flat.jpg')
+    img2 = cv2.imread('data/images/3836-_flat.jpg')
     ic.compare_images(img1, img2, True)
 

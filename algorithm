@@ -1,0 +1,15 @@
+Compare 2 images to see if they represent the same place.
+
+1. Load the two images you want to compare.
+2. Convert the images to grayscale.
+3. Detect keypoints and extract descriptors using SIFT for both images.
+4. Perform feature matching using a matching algorithm such as FLANN or brute force matching.
+5. Filter out the good matches using a distance ratio test.
+6. Extract the keypoint coordinates for the good matches.
+7. Use the RANSAC algorithm to estimate the fundamental matrix.
+9. Calculate the number of inliers
+    (keypoint matches that agree with the estimated fundamental matrix) and outliers.
+10. Set a threshold for the number of inliers to determine if the images represent the same objects.
+11. If the number of inliers is above the threshold,
+    conclude that the images represent the same objects.
+    Otherwise, conclude they represent different objects.
