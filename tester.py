@@ -44,16 +44,6 @@ def preprocess_images():
         shutil.copy(image, './data/images/mixed/')
 
 
-def resize_images(image_paths, size, output_path):
-    for image_path in image_paths:
-        image = Image.open(image_path)
-        resized_image = image.resize(size)
-        folder_name = image_path.split('/')[-2]
-        os.makedirs(output_path + f'{size}', exist_ok=True)
-
-        resized_image.save(output_path + 'smaller/' + os.path.basename(image_path))
-
-
 def score_folder(folder_path):
     image_paths = recursive_ls(folder_path)
     image_pairs = get_all_pairs(image_paths)
@@ -74,7 +64,6 @@ def get_all_pairs(lst):
 
 # score_folder('./data/images/original/golden_gate/')
 # image_paths = recursive_ls('./data/images/original/')
-# resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')
 
 image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
-image_resizer.resize_images()
+image_resizer.resize_images((640, 480))
