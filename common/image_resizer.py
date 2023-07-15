@@ -7,9 +7,12 @@ class ImageResizer:
         self.input_dir = input_dir
         self.output_dir = output_dir
 
-    def resize_images(self, size):
+    def create_output_dir(self):
         if not os.path.exists(self.output_dir):
             os.mkdir(self.output_dir)
+
+    def resize_images(self, size):
+        self.create_output_dir()
 
         for image_file in os.listdir(self.input_dir):
             image = cv2.imread(os.path.join(self.input_dir, image_file))

@@ -4,6 +4,7 @@ from PIL import Image
 from image_comparer import ImageComparer
 from my_image import MyImage
 from common.image_resizer import ImageResizer
+from common.convert_image_format import ImageConverter
 
 import itertools
 
@@ -62,8 +63,13 @@ def get_all_pairs(lst):
     return list(itertools.combinations(lst, 2))
 
 
-# score_folder('./data/images/original/golden_gate/')
+score_folder('./data/images/original/statue_of_liberty/')
+
 # image_paths = recursive_ls('./data/images/original/')
 
-image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
-image_resizer.resize_images((640, 480))
+# image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
+# image_resizer.resize_images((640, 480))
+#
+# image_converter = ImageConverter('./data/images/original/statue_of_liberty',
+#                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
+# image_converter.convert_images()
