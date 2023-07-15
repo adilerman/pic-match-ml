@@ -3,6 +3,8 @@ import shutil
 from PIL import Image
 from image_comparer import ImageComparer
 from my_image import MyImage
+from common.image_resizer import ImageResizer
+from common.convert_image_format import ImageConverter
 
 import itertools
 
@@ -43,16 +45,6 @@ def preprocess_images():
         shutil.copy(image, './data/images/mixed/')
 
 
-def resize_images(image_paths, size, output_path):
-    for image_path in image_paths:
-        image = Image.open(image_path)
-        resized_image = image.resize(size)
-        folder_name = image_path.split('/')[-2]
-        os.makedirs(output_path + f'{size}', exist_ok=True)
-
-        resized_image.save(output_path + 'smaller/' + os.path.basename(image_path))
-
-
 def score_folder(folder_path):
     image_paths = recursive_ls(folder_path)
     image_pairs = get_all_pairs(image_paths)
@@ -61,7 +53,7 @@ def score_folder(folder_path):
     for img1_path, img2_path in image_pairs:
         img1 = MyImage(img1_path)
         img2 = MyImage(img2_path)
-        is_matching = image_comparer.compare_images(img1, img2,True)
+        is_matching = image_comparer.compare_images(img1, img2, False)
         matches.append(is_matching)
 
     print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
@@ -71,8 +63,13 @@ def get_all_pairs(lst):
     return list(itertools.combinations(lst, 2))
 
 
-#
-# score_folder('./data/images/original/big_ben/')
-image_paths = recursive_ls('./data/images/original/')
+score_folder('./data/images/original/statue_of_liberty/')
 
-resize_images(image_paths, size=(256, 256), output_path='data/images/256x256/eiffel/')
+# image_paths = recursive_ls('./data/images/original/')
+
+# image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
+# image_resizer.resize_images((640, 480))
+#
+# image_converter = ImageConverter('./data/images/original/statue_of_liberty',
+#                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
+# image_converter.convert_images()
