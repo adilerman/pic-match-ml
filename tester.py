@@ -63,12 +63,16 @@ def get_all_pairs(lst):
     return list(itertools.combinations(lst, 2))
 
 
-score_folder('./data/images/original/statue_of_liberty/')
+def create_dataset(input_path, output_path, size):
+    for path in os.listdir(input_path):
+        image_resizer = ImageResizer(os.path.join(input_path, path), f'{output_path}/{size[0]}x{size[1]}')
+        image_resizer.resize_images(size)
+# score_folder('./data/images/original/statue_of_liberty/')
 
 # image_paths = recursive_ls('./data/images/original/')
 
-# image_resizer = ImageResizer('./data/images/original/golden_gate', './data/images/640x480/golden_gate')
-# image_resizer.resize_images((640, 480))
+create_dataset('./data/images/original', './data/images/', (640, 480))
+
 #
 # image_converter = ImageConverter('./data/images/original/statue_of_liberty',
 #                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
