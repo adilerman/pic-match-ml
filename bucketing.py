@@ -9,7 +9,6 @@ Algorithm:
 
 """
 import itertools
-import os
 
 from common.utils import filter_nested_lists
 from image_comparer import ImageComparer
@@ -104,7 +103,7 @@ def bucket_images(matches, images_to_bucket):
 
 
 if __name__ == '__main__':
-    bucketing = Bucketing(input_path='./data/images/640x480')
+    bucketing = Bucketing(input_path='./data/images/640x480/')
     all_matches = bucketing.find_matching_pairs()
     bucket_images(all_matches, images_to_bucket=bucketing.all_images_paths)
     x = 4
