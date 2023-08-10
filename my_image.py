@@ -3,7 +3,7 @@ import cv2
 
 class MyImage:
     def __init__(self, path):
-        self.sift = cv2.SIFT_create(nfeatures=3000, edgeThreshold=2000)
+        self.sift = cv2.SIFT_create()
         self.path = path
         self.img = cv2.imread(path)
         self.img_grey = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
