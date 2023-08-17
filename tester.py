@@ -45,7 +45,7 @@ def preprocess_images():
         shutil.copy(image, './data/images/mixed/')
 
 
-def score_folder(folder_path):
+def score_folder(folder_path, print_matches=True):
     image_paths = recursive_ls(folder_path)
     image_pairs = get_all_pairs(image_paths)
     image_comparer = ImageComparer()
@@ -53,7 +53,7 @@ def score_folder(folder_path):
     for img1_path, img2_path in image_pairs:
         img1 = MyImage(img1_path)
         img2 = MyImage(img2_path)
-        is_matching = image_comparer.compare_images(img1, img2, False)
+        is_matching = image_comparer.compare_images(img1, img2, print_matches)
         matches.append(is_matching)
 
     print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
@@ -67,11 +67,13 @@ def create_dataset(input_path, output_path, size):
     for path in os.listdir(input_path):
         image_resizer = ImageResizer(os.path.join(input_path, path), f'{output_path}/{size[0]}x{size[1]}')
         image_resizer.resize_images(size)
-# score_folder('./data/images/original/statue_of_liberty/')
+
+
+score_folder('./data/old_scraped/agg4', print_matches=False)
 
 # image_paths = recursive_ls('./data/images/original/')
 
-create_dataset('./data/images/original', './data/images/', (640, 480))
+# create_dataset('./data/images/original', './data/images/', (640, 480))
 
 #
 # image_converter = ImageConverter('./data/images/original/statue_of_liberty',
