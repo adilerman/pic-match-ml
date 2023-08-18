@@ -57,6 +57,7 @@ def score_folder(folder_path, print_matches=True):
         matches.append(is_matching)
 
     print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
+    return matches, image_pairs
 
 
 def get_all_pairs(lst):
@@ -69,7 +70,10 @@ def create_dataset(input_path, output_path, size):
         image_resizer.resize_images(size)
 
 
-score_folder('./data/old_scraped/agg4', print_matches=False)
+# matches_agg3, image_pairs_agg3 = score_folder('./data/old_scraped/agg3', print_matches=False)
+# matches_agg4, image_pairs_agg4 = score_folder('./data/old_scraped/agg4', print_matches=False)
+# matches_agg3_results, image_pairs_agg3_results = score_folder('./data/old_scraped/agg3_results', print_matches=False)
+matches_agg4_results, image_pairs_agg4_results = score_folder('./data/old_scraped/agg4_results', print_matches=True)
 
 # image_paths = recursive_ls('./data/images/original/')
 
