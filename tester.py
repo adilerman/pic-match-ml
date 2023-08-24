@@ -75,7 +75,6 @@ score_folder('./data/old_scraped/agg4', print_matches=False)
 
 # create_dataset('./data/images/original', './data/images/', (640, 480))
 
-#
 # image_converter = ImageConverter('./data/images/original/statue_of_liberty',
 #                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
 # image_converter.convert_images()
