@@ -48,17 +48,17 @@ def preprocess_images():
 
 
 def score_folder(folder_path, print_matches=True):
-    image_paths = recursive_ls(folder_path)
+    image_paths = sorted(recursive_ls(folder_path))
     image_pairs = get_all_pairs(image_paths)
     image_comparer = ImageComparer()
-    matches = []
+    matches = defaultdict(dict)
     for img1_path, img2_path in image_pairs:
         img1 = MyImage(img1_path)
         img2 = MyImage(img2_path)
         is_matching = image_comparer.compare_images(img1, img2, print_matches)
-        matches.append(is_matching)
+        matches[os.path.basename(img1.path)][os.path.basename(img2_path)] = is_matching
 
-    print(f"Found {matches.count(True)} matches out of total {len(image_pairs)} pairs")
+    print(f"Found {list(matches.values()).count(True)} matches out of total {len(image_pairs)} pairs")
     return matches, image_pairs
 
 
