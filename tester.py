@@ -5,6 +5,8 @@ from image_comparer import ImageComparer
 from my_image import MyImage
 from common.image_resizer import ImageResizer
 from common.convert_image_format import ImageConverter
+from collections import defaultdict
+import glob
 
 import itertools
 
@@ -70,11 +72,40 @@ def create_dataset(input_path, output_path, size):
         image_resizer.resize_images(size)
 
 
+<<<<<<< Updated upstream
 score_folder('./data/old_scraped/agg3', print_matches=False)
 # matches_agg4, image_pairs_agg4 = score_folder('./data/old_scraped/agg4', print_matches=False)
 # matches_agg3_results, image_pairs_agg3_results = score_folder('./data/old_scraped/agg3_results', print_matches=False)
 # matches_agg4_results, image_pairs_agg4_results = score_folder('./data/old_scraped/agg4_results', print_matches=True)
+=======
+def get_matching(img_1, img_2):
+    file_name = img_1.split('/')[-1]
+    first_part_of_string = file_name.split('_')[0]
+    other_file_name = img_2.split('/')[-1]
+    other_first_part_of_string = other_file_name.split('_')[0]
+    if first_part_of_string == other_first_part_of_string and first_part_of_string != 'non':
+        return True
+    return False
+>>>>>>> Stashed changes
 
+
+def create_matrix(folder_path):
+    image_paths = sorted(recursive_ls(folder_path))
+    image_pairs = get_all_pairs(image_paths)
+    matches = defaultdict(dict)
+    for img1_path, img2_path in image_pairs:
+        is_matching = get_matching(img1_path, img2_path)
+        matches[os.path.basename(img1_path)][os.path.basename(img2_path)] = is_matching
+
+    print(f"Found {list(matches.values()).count(True)} matches out of total {len(image_pairs)} pairs")
+    return matches, image_pairs
+
+# score_folder('./data/old_scraped/agg4', print_matches=False)
+
+
+m, pairs = create_matrix("/Users/shayarbiv/Downloads/test_v2/")
+
+print('hello')
 # image_paths = recursive_ls('./data/images/original/')
 
 # create_dataset('./data/images/original', './data/images/', (640, 480))
