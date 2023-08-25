@@ -72,12 +72,6 @@ def create_dataset(input_path, output_path, size):
         image_resizer.resize_images(size)
 
 
-<<<<<<< Updated upstream
-score_folder('./data/old_scraped/agg3', print_matches=False)
-# matches_agg4, image_pairs_agg4 = score_folder('./data/old_scraped/agg4', print_matches=False)
-# matches_agg3_results, image_pairs_agg3_results = score_folder('./data/old_scraped/agg3_results', print_matches=False)
-# matches_agg4_results, image_pairs_agg4_results = score_folder('./data/old_scraped/agg4_results', print_matches=True)
-=======
 def get_matching(img_1, img_2):
     file_name = img_1.split('/')[-1]
     first_part_of_string = file_name.split('_')[0]
@@ -86,7 +80,6 @@ def get_matching(img_1, img_2):
     if first_part_of_string == other_first_part_of_string and first_part_of_string != 'non':
         return True
     return False
->>>>>>> Stashed changes
 
 
 def create_matrix(folder_path):
