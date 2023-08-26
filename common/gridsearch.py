@@ -1,23 +1,28 @@
-from tester import score_folder
+
 from itertools import product
+import pandas as pd
+
+from common.score_folder import score_folder, score_sift
 
 
 class SiftGridSearch:
-    def __init__(self, folder_path, grid, output_path):
-        self.folder_path = folder_path
+    def __init__(self, input_path, grid, output_path, y_test):
+        self.folder_path = input_path
         self.grid = grid
         self.output_path = output_path
-        # self.threshold = threshold
-        # self.nfeatures = nfeatures
-        # self.n_octave_layers = n_octave_layers
-        # self.contrast_threshold = contrast_threshold
-        # self.edge_threshold = edge_threshold
+        self.y_test = y_test
 
     def run(self):
+        df = pd.DataFrame()
         combinations = self.get_combinations()
         for combination in combinations:
             matches = score_folder(self.folder_path, combination)
-            score = score_sift(matches, )
+            score = score_sift(matches, self.y_test)
+            combination.update(score)
+            df = df.append(combination, ignore_index=True)
+            print(f"Finished combination \n{combination}")
+        # self.output(df)
+
 
     def get_combinations(self):
         param_names = list(self.grid.keys())
@@ -31,8 +36,7 @@ class SiftGridSearch:
 
         return combinations
 
-    def output(self):
-
-        return
+    def output(self, df):
+        df.to_csv(self.output_path, index=False)
 
 

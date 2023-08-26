@@ -4,9 +4,9 @@ from my_image import MyImage
 
 
 class ImageComparer:
-    def __init__(self, matcher, threshold):
-        self.matcher = matcher  # cv2.FlannBasedMatcher_create()
-        self.threshold = threshold  # 22
+    def __init__(self, params):
+        self.matcher = params['matcher']  # cv2.FlannBasedMatcher_create()
+        self.threshold = params['threshold']  # 22
 
     @staticmethod
     def to_greyscale(img):
@@ -31,13 +31,17 @@ class ImageComparer:
             return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
-        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
-        # Apply ratio test to filter good matches
-        good_matches = []
-        for m, n in matches:
-            if m.distance < 0.75 * n.distance:
-                good_matches.append(m)
-        return good_matches
+        if isinstance(self.matcher, cv2.BFMatcher):
+            matches = self.matcher.match(descriptors1, descriptors2)
+        else:
+            matches = self.matcher().knnMatch(descriptors1, descriptors2, k=2)
+            # Apply ratio test to filter good matches
+            good_matches = []
+            for m, n in matches:
+                if m.distance < 0.75 * n.distance:
+                    good_matches.append(m)
+            matches = good_matches
+        return matches
 
     @staticmethod
     def create_fundamental_matrix(good_matches, keypoints1, keypoints2):

@@ -1,21 +1,13 @@
 import os
 import shutil
+
+import cv2
 from PIL import Image
-from image_comparer import ImageComparer
-from my_image import MyImage
+from common.gridsearch import SiftGridSearch
+from common.utils import recursive_ls, get_all_pairs
 from common.image_resizer import ImageResizer
 from collections import defaultdict
-import itertools
-
-
-def recursive_ls(directory):
-    file_list = []
-    for root, dirs, files in os.walk(directory):
-        # Append all files in the current directory to the list
-        for file in files:
-            file_list.append(os.path.join(root, file))
-
-    return file_list
+import time
 
 
 def convert_webp_to_jpg(webp_path, jpg_path):
@@ -42,24 +34,6 @@ def preprocess_images():
         os.rename(image, image.replace('big_ben/images', 'big_ben/big_ben'))
         # copy everything to mixed
         shutil.copy(image, './data/images/mixed/')
-
-
-def score_folder(folder_path, print_matches=False):
-    image_paths = sorted(recursive_ls(folder_path))
-    image_pairs = get_all_pairs(image_paths)
-    image_comparer = ImageComparer()
-    matches = defaultdict(dict)
-    for img1_path, img2_path in image_pairs:
-        img1 = MyImage(img1_path)
-        img2 = MyImage(img2_path)
-        is_matching = image_comparer.compare_images(img1, img2, print_matches)
-        matches[os.path.basename(img1.path)][os.path.basename(img2_path)] = is_matching
-    print(f"Found {list(matches.values()).count(True)} matches out of total {len(image_pairs)} pairs")
-    return matches
-
-
-def get_all_pairs(lst):
-    return list(itertools.combinations(lst, 2))
 
 
 def create_dataset(input_path, output_path, size):
@@ -89,29 +63,24 @@ def create_matrix(folder_path):
 
 
 # score_folder('./data/old_scraped/agg4', print_matches=False)
-def score_sift(y_pred, y_test):
-    total_positive = 0
-    total_negative = 0
-    true_positive = 0
-    true_negative = 0
-    for img1, matches in y_test.items():
-        for img2, is_matching in matches.items():
-            if is_matching:
-                total_positive += 1
-                if y_pred[img1][img2]:
-                    true_positive += 1
-            elif not is_matching:
-                total_negative += 1
-                if not y_pred[img1][img2]:
-                    true_negative += 1
-    res = {'true_positive': true_positive, 'true_negative': true_negative, 'total_positive': total_positive, 'total_negative': total_negative}
-    return res
 
 
-y_test = create_matrix("./data/v2/all/")
-y_pred = score_folder("./data/v2/all/")
+y_test = create_matrix('/Users/shayarbiv/Downloads/v2/agg3/')
+# y_pred = score_folder("./data/v2/all/")
+grid = {
+    'threshold': [20, 21, 22],
+    'matcher': [cv2.FlannBasedMatcher, cv2.BFMatcher],
+    'nfeatures': [0, 2400, 3600, 4800, 6000],
+    'n_octave_layers': [None],
+    'contrast_threshold': [0.01, 0.02, 0.03],
+    'edge_threshold': [None],
+    'sigma': [None]
+}
 
-print(score_sift(y_pred, y_test))
+grid_search = SiftGridSearch('/Users/shayarbiv/Downloads/v2/agg3', grid,
+                             f'/Users/shayarbiv/Downloads/v2/grid_results_{time.time()}.csv', y_test)
+grid_search.run()
+# print(score_sift(y_pred, y_test))
 
 # create_dataset('./data/images/original', './data/images/', (640, 480))
 
