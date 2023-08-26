@@ -24,3 +24,13 @@ def recursive_ls(directory):
 
 def get_all_pairs(lst):
     return list(itertools.combinations(lst, 2))
+
+
+def convert_webp_to_jpg(webp_path, jpg_path):
+    # Open the WebP image
+    image = Image.open(webp_path)
+    # Convert to RGB if the image mode is not 'RGB'
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+    # Save as JPG
+    image.save(jpg_path, "JPEG")

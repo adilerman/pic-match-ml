@@ -10,14 +10,7 @@ from collections import defaultdict
 import time
 
 
-def convert_webp_to_jpg(webp_path, jpg_path):
-    # Open the WebP image
-    image = Image.open(webp_path)
-    # Convert to RGB if the image mode is not 'RGB'
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-    # Save as JPG
-    image.save(jpg_path, "JPEG")
+
 
 
 # noinspection PyTypeChecker
@@ -64,8 +57,8 @@ def create_matrix(folder_path):
 
 # score_folder('./data/old_scraped/agg4', print_matches=False)
 
-
-y_test = create_matrix('/Users/shayarbiv/Downloads/v2/agg3/')
+input_path = './data/v2/agg3'
+y_test = create_matrix(input_path)
 # y_pred = score_folder("./data/v2/all/")
 grid = {
     'threshold': [20, 21, 22],
@@ -77,8 +70,8 @@ grid = {
     'sigma': [None]
 }
 
-grid_search = SiftGridSearch('/Users/shayarbiv/Downloads/v2/agg3', grid,
-                             f'/Users/shayarbiv/Downloads/v2/grid_results_{time.time()}.csv', y_test)
+grid_search = SiftGridSearch(input_path, grid,
+                             f'./grid_results_{time.time()}.csv', y_test)
 grid_search.run()
 # print(score_sift(y_pred, y_test))
 
