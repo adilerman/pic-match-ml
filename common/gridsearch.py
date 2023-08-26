@@ -20,7 +20,7 @@ class SiftGridSearch:
 
     def run(self):
         combinations = self.get_combinations()
-        pool = multiprocessing.Pool(processes=6)
+        pool = multiprocessing.Pool(processes=8)
         # Use the pool to map the process_combination function to each combination
         df = pool.map(self.process_combination, combinations)
 
@@ -28,8 +28,7 @@ class SiftGridSearch:
         pool.close()
         pool.join()
 
-        # self.output(df)
-
+        self.output(df)
 
     def get_combinations(self):
         param_names = list(self.grid.keys())

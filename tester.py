@@ -1,6 +1,6 @@
 import os
 import shutil
-
+import caffeine
 import cv2
 from common.gridsearch import SiftGridSearch
 from common.utils import recursive_ls, get_all_pairs, convert_webp_to_jpg
@@ -50,7 +50,6 @@ def create_matrix(folder_path):
     return matches
 
 
-# score_folder('./data/old_scraped/agg4', print_matches=False)
 if __name__ == '__main__':
     input_path = './data/v2/agg3'
     y_test = create_matrix(input_path)
@@ -58,11 +57,11 @@ if __name__ == '__main__':
     grid = {
         'threshold': [20, 21, 22],
         'matcher': [cv2.FlannBasedMatcher, cv2.BFMatcher],
-        'nfeatures': [0, 2400, 3600, 4800, 6000],
-        'n_octave_layers': [None],
+        'nfeatures': [0, 1000, 3000, 6000],
+        'n_octave_layers': [None, 2, 3],
         'contrast_threshold': [0.01, 0.02, 0.03],
-        'edge_threshold': [None],
-        'sigma': [None]
+        'edge_threshold': [5, 10, 15],
+        'sigma': [1.0, 1.6, 2.0]
     }
     grid_search = SiftGridSearch(input_path, grid,
                                  f'./grid_results_{time.time()}.csv', y_test)

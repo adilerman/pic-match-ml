@@ -5,7 +5,7 @@ from my_image import MyImage
 
 class ImageComparer:
     def __init__(self, params):
-        self.matcher = params['matcher']  # cv2.FlannBasedMatcher_create()
+        self.matcher = params['matcher']()  # cv2.FlannBasedMatcher_create()
         self.threshold = params['threshold']  # 22
 
     @staticmethod
