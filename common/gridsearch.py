@@ -1,7 +1,6 @@
-
 from itertools import product
 import pandas as pd
-
+import multiprocessing
 from common.score_folder import score_folder, score_sift
 
 
@@ -12,16 +11,25 @@ class SiftGridSearch:
         self.output_path = output_path
         self.y_test = y_test
 
+    def process_combination(self, combination):
+        matches = score_folder(self.folder_path, combination)
+        score = score_sift(matches, self.y_test)
+        combination.update(score)
+        print(f"Finished combination \n{combination}")
+        return pd.DataFrame.from_dict(combination, orient='index')
+
     def run(self):
-        df = pd.DataFrame()
         combinations = self.get_combinations()
-        for combination in combinations:
-            matches = score_folder(self.folder_path, combination)
-            score = score_sift(matches, self.y_test)
-            combination.update(score)
-            df = pd.concat([df, pd.DataFrame.from_dict(combination, orient='index').T], ignore_index=True)
-            print(f"Finished combination \n{combination}")
+        pool = multiprocessing.Pool(processes=6)
+        # Use the pool to map the process_combination function to each combination
+        df = pool.map(self.process_combination, combinations)
+
+        # Close the pool and wait for all processes to finish
+        pool.close()
+        pool.join()
+
         # self.output(df)
+
 
     def get_combinations(self):
         param_names = list(self.grid.keys())
