@@ -50,23 +50,6 @@ def create_matrix(folder_path):
     return matches
 
 
-if __name__ == '__main__':
-    input_path = '/Users/shayarbiv/Downloads/v2/agg3'
-    y_test = create_matrix(input_path)
-    # y_pred = score_folder("./data/v2/all/")
-    grid = {
-        'threshold': [19, 21, 22],
-        'matcher': [cv2.BFMatcher()],
-        'nfeatures': [3600, 4800],
-        'n_octave_layers': [None],
-        'contrast_threshold': [None],
-        'edge_threshold': [3000, 4000, 5000],
-        'sigma': [None]
-    }
-
-    grid_search = SiftGridSearch(input_path, grid,
-                                 f'/Users/shayarbiv/Downloads/v2/agg3/grid_results_{time.time()}.csv', y_test)
-    grid_search.run()
 # score_folder('./data/old_scraped/agg4', print_matches=False)
 if __name__ == '__main__':
     input_path = './data/v2/agg3'
