@@ -2,18 +2,13 @@ import os
 import shutil
 
 import cv2
-from PIL import Image
 from common.gridsearch import SiftGridSearch
-from common.utils import recursive_ls, get_all_pairs
+from common.utils import recursive_ls, get_all_pairs, convert_webp_to_jpg
 from common.image_resizer import ImageResizer
 from collections import defaultdict
 import time
 
 
-
-
-
-# noinspection PyTypeChecker
 def preprocess_images():
     images = recursive_ls('./data/images/')
     for idx, image in enumerate(images):
@@ -55,29 +50,26 @@ def create_matrix(folder_path):
     return matches
 
 
-# score_folder('./data/old_scraped/agg4', print_matches=False)
+if __name__ == '__main__':
+    input_path = '/Users/shayarbiv/Downloads/v2/agg3'
+    y_test = create_matrix(input_path)
+    # y_pred = score_folder("./data/v2/all/")
+    grid = {
+        'threshold': [19, 21, 22],
+        'matcher': [cv2.BFMatcher()],
+        'nfeatures': [3600, 4800],
+        'n_octave_layers': [None],
+        'contrast_threshold': [None],
+        'edge_threshold': [3000, 4000, 5000],
+        'sigma': [None]
+    }
 
-input_path = './data/v2/agg3'
-y_test = create_matrix(input_path)
-# y_pred = score_folder("./data/v2/all/")
-grid = {
-    'threshold': [20, 21, 22],
-    'matcher': [cv2.FlannBasedMatcher, cv2.BFMatcher],
-    'nfeatures': [0, 2400, 3600, 4800, 6000],
-    'n_octave_layers': [None],
-    'contrast_threshold': [0.01, 0.02, 0.03],
-    'edge_threshold': [None],
-    'sigma': [None]
-}
-
-grid_search = SiftGridSearch(input_path, grid,
-                             f'./grid_results_{time.time()}.csv', y_test)
-grid_search.run()
-# print(score_sift(y_pred, y_test))
+    grid_search = SiftGridSearch(input_path, grid,
+                                 f'/Users/shayarbiv/Downloads/v2/agg3/grid_results_{time.time()}.csv', y_test)
+    grid_search.run()
 
 # create_dataset('./data/images/original', './data/images/', (640, 480))
 
-#
 # image_converter = ImageConverter('./data/images/original/statue_of_liberty',
 #                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
 # image_converter.convert_images()

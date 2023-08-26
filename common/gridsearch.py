@@ -19,10 +19,9 @@ class SiftGridSearch:
             matches = score_folder(self.folder_path, combination)
             score = score_sift(matches, self.y_test)
             combination.update(score)
-            df = pd.concat([df,pd.DataFrame.from_dict(combination,orient='index').T], ignore_index=True)
+            df = pd.concat([df, pd.DataFrame.from_dict(combination, orient='index').T], ignore_index=True)
             print(f"Finished combination \n{combination}")
         # self.output(df)
-
 
     def get_combinations(self):
         param_names = list(self.grid.keys())

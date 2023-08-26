@@ -1,5 +1,6 @@
 import os
 import itertools
+from PIL import Image
 
 
 def filter_nested_lists(nested_list, result=[]):

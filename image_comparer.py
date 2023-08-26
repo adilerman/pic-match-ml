@@ -31,16 +31,13 @@ class ImageComparer:
             return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
-        if isinstance(self.matcher, cv2.BFMatcher):
-            matches = self.matcher.match(descriptors1, descriptors2)
-        else:
-            matches = self.matcher().knnMatch(descriptors1, descriptors2, k=2)
-            # Apply ratio test to filter good matches
-            good_matches = []
-            for m, n in matches:
-                if m.distance < 0.75 * n.distance:
-                    good_matches.append(m)
-            matches = good_matches
+        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
+        # Apply ratio test to filter good matches
+        good_matches = []
+        for m, n in matches:
+            if m.distance < 0.75 * n.distance:
+                good_matches.append(m)
+        matches = good_matches
         return matches
 
     @staticmethod

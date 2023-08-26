@@ -7,22 +7,24 @@ import os
 
 
 def score_sift(y_pred, y_test):
-    total_positive = 0
-    total_negative = 0
+    false_positive = 0
+    false_negative = 0
     true_positive = 0
     true_negative = 0
     for img1, matches in y_test.items():
         for img2, is_matching in matches.items():
             if is_matching:
-                total_positive += 1
                 if y_pred[img1][img2]:
                     true_positive += 1
+                else:
+                    false_positive += 1
             elif not is_matching:
-                total_negative += 1
                 if not y_pred[img1][img2]:
                     true_negative += 1
-    res = {'true_positive': true_positive, 'true_negative': true_negative, 'total_positive': total_positive,
-           'total_negative': total_negative}
+                else:
+                    false_negative += 1
+    res = {'true_positive': true_positive, 'true_negative': true_negative, 'false_positive': false_positive,
+           'false_negative': false_negative}
     return res
 
 
