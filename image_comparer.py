@@ -2,12 +2,11 @@ import cv2
 import numpy as np
 from my_image import MyImage
 
-THRESHOLD = 22
-
 
 class ImageComparer:
-    def __init__(self):
-        self.matcher = cv2.FlannBasedMatcher_create()
+    def __init__(self, matcher, threshold):
+        self.matcher = matcher  # cv2.FlannBasedMatcher_create()
+        self.threshold = threshold  # 22
 
     @staticmethod
     def to_greyscale(img):
@@ -23,7 +22,7 @@ class ImageComparer:
             return False
         inliers = np.sum(mask)
         # Compare number of inliers with threshold
-        if inliers >= THRESHOLD:
+        if inliers >= self.threshold:
             self.print_matching_points(img1.img, img2.img, print_matches, mask, good_matches, img1.keypoints, img2.keypoints)
             # print("The images represent the same objects.")
             return True
