@@ -3,7 +3,9 @@ import cv2
 
 class MyImage:
     def __init__(self, path, params):
-        self.sift = cv2.SIFT_create(nfeatures=params['nfeatures'], contrastThreshold=params['contrast_threshold'])
+        self.sift = cv2.SIFT_create(nfeatures=params['nfeatures'], contrastThreshold=params['contrast_threshold'],
+                                    nOctaveLayers=params['n_octave_layers'], edgeThreshold=params['edge_threshold'],
+                                    sigma=params['sigma'])
         self.path = path
         self.img = cv2.imread(path)
         self.img_grey = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
