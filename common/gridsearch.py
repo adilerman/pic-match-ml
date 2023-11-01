@@ -1,7 +1,9 @@
+import os
 from itertools import product
 import pandas as pd
 import multiprocessing
 from common.score_folder import score_folder, score_sift
+import datetime
 
 
 class SiftGridSearch:
@@ -12,23 +14,25 @@ class SiftGridSearch:
         self.y_test = y_test
 
     def process_combination(self, combination):
+        start = datetime.datetime.now()
+        print(f"starting combination {combination}")
         matches = score_folder(self.folder_path, combination)
         score = score_sift(matches, self.y_test)
         combination.update(score)
-        print(f"Finished combination \n{combination}")
-        return pd.DataFrame.from_dict(combination, orient='index')
+        print(f"took {datetime.datetime.now() - start} Finished combination \n{combination}")
+        return pd.DataFrame.from_dict(combination, orient='index').T
 
     def run(self):
         combinations = self.get_combinations()
-        pool = multiprocessing.Pool(processes=8)
+        print(f"there are {len(combinations)} combinations")
+        print(f"there are {os.cpu_count()} cpus")
+        pool = multiprocessing.Pool(processes=os.cpu_count() - 1)
         # Use the pool to map the process_combination function to each combination
         df = pool.map(self.process_combination, combinations)
-
         # Close the pool and wait for all processes to finish
         pool.close()
         pool.join()
-
-        self.output(df)
+        self.output(pd.concat(df, ignore_index=True))
 
     def get_combinations(self):
         param_names = list(self.grid.keys())
@@ -44,5 +48,3 @@ class SiftGridSearch:
 
     def output(self, df):
         df.to_csv(self.output_path, index=False)
-
-

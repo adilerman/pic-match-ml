@@ -1,3 +1,4 @@
+import datetime
 import os
 import shutil
 import caffeine
@@ -25,9 +26,8 @@ def preprocess_images():
 
 
 def create_dataset(input_path, output_path, size):
-    for path in os.listdir(input_path):
-        image_resizer = ImageResizer(os.path.join(input_path, path), f'{output_path}/{size[0]}x{size[1]}')
-        image_resizer.resize_images(size)
+    image_resizer = ImageResizer(input_path, f'{output_path}/{size[0]}x{size[1]}')
+    image_resizer.resize_images(size)
 
 
 def get_matching(img_1, img_2):
@@ -51,25 +51,30 @@ def create_matrix(folder_path):
 
 
 if __name__ == '__main__':
-    input_path = './data/v2/agg3'
+    input_path = '/Users/adilerman/Downloads/images/real'
     y_test = create_matrix(input_path)
-    # y_pred = score_folder("./data/v2/all/")
+    start = datetime.datetime.now()
+    print(f'{datetime.datetime.now() - start}0')
+    # grid = {
+    #     'threshold': [20, 21, 22],
+    #     'matcher': [cv2.BFMatcher],
+    #     'nfeatures': [0, 1000, 3000, 6000],
+    #     'n_octave_layers': [None, 2, 3],
+    #     'contrast_threshold': [0.09, 0.02, 0.03],
+    #     'edge_threshold': [5, 10, 15],
+    #     'sigma': [1.0, 1.6, 2.0]
+    # }
     grid = {
-        'threshold': [20, 21, 22],
-        'matcher': [cv2.FlannBasedMatcher, cv2.BFMatcher],
-        'nfeatures': [0, 1000, 3000, 6000],
-        'n_octave_layers': [None, 2, 3],
-        'contrast_threshold': [0.01, 0.02, 0.03],
-        'edge_threshold': [5, 10, 15],
-        'sigma': [1.0, 1.6, 2.0]
+        'threshold': [22],
+        'matcher': [cv2.BFMatcher],
+        'nfeatures': [3000],
+        'n_octave_layers': [ 3],
+        'contrast_threshold': [0.09],
+        'edge_threshold': [ 10],
+        'sigma': [ 1.6]
     }
-    grid_search = SiftGridSearch(input_path, grid,
-                                 f'./grid_results_{time.time()}.csv', y_test)
+    print(f'{datetime.datetime.now() - start}t0')
+    grid_search = SiftGridSearch(input_path, grid, f'./original_1024_gan_grid_results_{time.time()}.csv', y_test)
+    print(f'{datetime.datetime.now() - start}t1')
     grid_search.run()
-# print(score_sift(y_pred, y_test))
-
-# create_dataset('./data/images/original', './data/images/', (640, 480))
-
-# image_converter = ImageConverter('./data/images/original/statue_of_liberty',
-#                                  './data/images/original/statue_of_liberty', 'jpg', 'jpeg')
-# image_converter.convert_images()
+    print(f'{datetime.datetime.now() - start} end')

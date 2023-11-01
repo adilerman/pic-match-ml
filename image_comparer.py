@@ -4,14 +4,26 @@ from my_image import MyImage
 
 
 class ImageComparer:
-    def __init__(self, params):
-        self.matcher = params['matcher']()  # cv2.FlannBasedMatcher_create()
-        self.threshold = params['threshold']  # 22
+    def __init__(self, params=None):
+        self.matcher = params['matcher']() if params else cv2.FlannBasedMatcher_create()
+        self.threshold = params['threshold'] if params else 22
 
     @staticmethod
     def to_greyscale(img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return gray
+
+    def find_second_best_matches(self, img1, img2):
+        matches = self.matcher.knnMatch(img1.descriptors, img2.descriptors, k=4)
+        # Apply ratio test to filter good matches
+        good_matches = []
+        for self_match, n_1, n_2, n_3 in matches:
+            if n_1.distance > 0.75 * n_2.distance and n_2.distance < 0.75 * n_3.distance:
+                good_matches.append(n_1)
+                good_matches.append(n_2)
+        matches = good_matches
+        fundamental_matrix, mask = self.create_fundamental_matrix(good_matches, img1.keypoints, img2.keypoints)
+        return matches, mask
 
     def compare_images(self, img1, img2, print_matches=False):
         # Perform feature matching
@@ -31,12 +43,12 @@ class ImageComparer:
             return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
-        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
+        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=3)
         # Apply ratio test to filter good matches
         good_matches = []
-        for m, n in matches:
-            if m.distance < 0.75 * n.distance:
-                good_matches.append(m)
+        for self_match, n_1, n_2 in matches:
+            if n_1.distance < 0.95 * n_2.distance:
+                good_matches.append(n_1)
         matches = good_matches
         return matches
 
