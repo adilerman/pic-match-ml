@@ -19,7 +19,7 @@ class BorderCropper:
             # Calculate gradient magnitude
             gradient_magnitude = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
             # Threshold to find edges
-            threshold = 100  # Adjust this value to suit your img
+            threshold = 200  # Adjust this value to suit your img
             border_edges = cv2.threshold(gradient_magnitude, threshold, 255, cv2.THRESH_BINARY)[1]
             # Find the coordinates of non-zero (edge) pixels
             non_zero_pixels = cv2.findNonZero(border_edges)
@@ -34,11 +34,11 @@ class BorderCropper:
             return os.path.basename(self.img.path)
 
 
-files = glob.glob('/Users/adilerman/PycharmProjects/pic-match-ml/data/old_scraped/original/*')
+files = glob.glob('/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/*.*')
 failed = []
 for file in files:
-    my_image_obj = my_image.MyImage(file, params=None)
-    bc = BorderCropper(img=my_image_obj, output_save_path='/Users/adilerman/PycharmProjects/pic-match-ml/data/v5_crop/cropped_originals')
+    my_image_obj = my_image.MyImage(file)
+    bc = BorderCropper(img=my_image_obj, output_save_path='/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/cropped/')
     failed.append(bc.crop_border())
 print(failed)
-x=5
+x = 5

@@ -14,10 +14,10 @@ class ImageComparer:
         return gray
 
     def find_second_best_matches(self, img1, img2):
-        matches = self.matcher.knnMatch(img1.descriptors, img2.descriptors, k=4)
+        matches = self.matcher.knnMatch(img1.descriptors, img2.descriptors, k=3)
         # Apply ratio test to filter good matches
         good_matches = []
-        for self_match, n_1, n_2, n_3 in matches:
+        for n_1, n_2, n_3 in matches:
             if n_1.distance > 0.75 * n_2.distance and n_2.distance < 0.75 * n_3.distance:
                 good_matches.append(n_1)
                 good_matches.append(n_2)
@@ -43,11 +43,11 @@ class ImageComparer:
             return False
 
     def find_best_matching_keypoints(self, descriptors1, descriptors2):
-        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=3)
+        matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
         # Apply ratio test to filter good matches
         good_matches = []
-        for self_match, n_1, n_2 in matches:
-            if n_1.distance < 0.95 * n_2.distance:
+        for n_1, n_2 in matches:
+            if n_1.distance < 0.85 * n_2.distance:  # and n_2.distance < 200:
                 good_matches.append(n_1)
         matches = good_matches
         return matches
@@ -58,7 +58,7 @@ class ImageComparer:
         src_pts = np.float32([keypoints1[m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
         dst_pts = np.float32([keypoints2[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
         # Use RANSAC to estimate fundamental matrix
-        fundamental_matrix, mask = cv2.findFundamentalMat(src_pts, dst_pts, cv2.RANSAC, 5.0)
+        fundamental_matrix, mask = cv2.findFundamentalMat(src_pts, dst_pts, cv2.RANSAC, 9.0)
         return fundamental_matrix, mask
 
     @staticmethod
