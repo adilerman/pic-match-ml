@@ -18,7 +18,7 @@ class Labeler:
     def __init__(self, input_path, output_path):
         self.input_path = input_path
         self.output_path = output_path
-        self.image_files = glob.glob(f'{input_path}*.jpg')  # Replace with your image file names
+        self.image_files = glob.glob(f'{input_path}*.jpg')
 
     def label_image(self, image_path):
         img = cv2.imread(image_path)

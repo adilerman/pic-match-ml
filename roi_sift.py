@@ -73,18 +73,18 @@ class RoiSift:
         return matching_pints
         # draw_heatmap(image=self.input_img_obj.img, points=matching_pints)
 
+if __name__ == '__main__':
+    input_image = '/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/cropped/border_removed_a_8_input.jpg'
+    comparing_images = [img for img in glob.glob('/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/cropped/*') if 'input' not in img]
+    roi_sift = RoiSift(input_image=input_image, comparing_images=comparing_images)
+    matching_pints = roi_sift.collect_matching_points()
 
-input_image = '/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/cropped/border_removed_a_8_input.jpg'
-comparing_images = [img for img in glob.glob('/Users/adilerman/PycharmProjects/pic-match-ml/data/v6_roi/cropped/*') if 'input' not in img]
-roi_sift = RoiSift(input_image=input_image, comparing_images=comparing_images)
-matching_pints = roi_sift.collect_matching_points()
-
-cnt = 0
-matched_keypoints = set()
-for keypoint in roi_sift.input_img_obj.keypoints:
-    if keypoint.pt in matching_pints:
-        cnt += 1
-        matched_keypoints.add(keypoint.pt)
-unmatched_keypoints = [point.pt for point in roi_sift.input_img_obj.keypoints if point.pt not in matched_keypoints]
-draw_heatmap(image=roi_sift.input_img_obj.img, points=unmatched_keypoints)
-x = 4
+    cnt = 0
+    matched_keypoints = set()
+    for keypoint in roi_sift.input_img_obj.keypoints:
+        if keypoint.pt in matching_pints:
+            cnt += 1
+            matched_keypoints.add(keypoint.pt)
+    unmatched_keypoints = [point.pt for point in roi_sift.input_img_obj.keypoints if point.pt not in matched_keypoints]
+    draw_heatmap(image=roi_sift.input_img_obj.img, points=unmatched_keypoints)
+    x = 4
