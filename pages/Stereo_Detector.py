@@ -80,17 +80,12 @@ def detect(path):
     return
 
 
-def main():
-    st.set_page_config(page_title="Stereo Images Detector", layout='wide')
-    st.title('Stereo Images Detector')
-    path = st.text_input("Enter images folder path", key=f'stereo_detector_output_path')
-    if path:
-        submit_clicked = st.button('Submit', on_click=detect, kwargs={'path': path})
-        if submit_clicked:
-            df = pd.DataFrame(st.session_state.y_pred, columns=['stereo_images'])
-            st.dataframe(df)
-            st.caption(f'Total Images Found: {len(df.index)}')
-
-
-if __name__ == '__main__':
-    main()
+st.set_page_config(page_title="Stereo Images Detector", layout='wide')
+st.title('Stereo Images Detector')
+path = st.text_input("Enter images folder path", key=f'stereo_detector_output_path')
+if path:
+    submit_clicked = st.button('Submit', on_click=detect, kwargs={'path': path})
+    if submit_clicked:
+        df = pd.DataFrame(st.session_state.y_pred, columns=['stereo_images'])
+        st.dataframe(df)
+        st.caption(f'Total Images Found: {len(df.index)}')

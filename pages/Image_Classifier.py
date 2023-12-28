@@ -30,28 +30,28 @@ def classify_image(bg_image):
     return pred
 
 
-if __name__ == '__main__':
-    try:
-        st.set_page_config(page_title="Image Classifier", layout='wide')
-        st.title('Image Classifier')
-        task = st.radio("Select classification task", ["Single image", "Classifications by path"])
-        if task == "Single image":
-            bg_image = st.file_uploader("Teat image to classify:", type=["png", "jpg"])
-            if bg_image:
-                pred = classify_image(bg_image)
-                st.success(f"The image contains the object" if pred == 'b' else "The image does not contain the object")
-        if task == "Classifications by path":
-            predictions = []
-            test_images_path = st.text_input("Path to classify")
-            if test_images_path:
-                test_images_path += '/' if test_images_path[-1] != '/' else ''
-                images_to_classify_path = glob.glob(test_images_path + '*.j*')
-                submit_clicked = st.button('Submit')
-                if submit_clicked:
-                    for image_to_classify in images_to_classify_path:
-                        pred = classify_image(image_to_classify)
-                        predictions.append([image_to_classify, pred])
-                    st.dataframe(pd.DataFrame(predictions))
-    except Exception as e:
-        print(e)
-        st.write(e)
+try:
+    st.set_page_config(page_title="Image Classifier", layout='wide')
+    st.title('Image Classifier')
+    task = st.radio("Select classification task", ["Single image", "Classifications by path"])
+    if task == "Single image":
+        bg_image = st.file_uploader("Teat image to classify:", type=["png", "jpg"])
+        if bg_image:
+            pred = classify_image(bg_image)
+            st.success(f"The image contains the object" if pred == 'b' else "The image does not contain the object")
+    if task == "Classifications by path":
+        predictions = []
+        test_images_path = st.text_input("Path to classify")
+        if test_images_path:
+            test_images_path += '/' if test_images_path[-1] != '/' else ''
+            images_to_classify_path = glob.glob(test_images_path + '*.j*')
+            submit_clicked = st.button('Submit')
+            if submit_clicked:
+                for image_to_classify in images_to_classify_path:
+                    pred = classify_image(image_to_classify)
+                    predictions.append([image_to_classify, pred])
+                st.dataframe(pd.DataFrame(predictions))
+except Exception as e:
+    print(e)
+    st.write(e)
+

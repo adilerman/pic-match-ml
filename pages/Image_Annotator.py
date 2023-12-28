@@ -57,33 +57,32 @@ def reset_state():
     st.session_state.selected_class = None
 
 
-if __name__ == '__main__':
-    try:
-        st.set_page_config(page_title="Image Annotator", layout='wide')
-        st.title('Image Annotator')
-        bg_image = st.file_uploader("Background image:", type=["png", "jpg"])
-        # print(bg_image)
-        if bg_image:
-            image_pil = Image.open(bg_image)
-            img_np = np.array(image_pil)
-            canvas_result = draw_canvas(bg_image)
-            # Do something interesting with the image data and paths
-            if canvas_result.json_data and canvas_result.json_data.get('objects'):
-                # Initialize session state if it doesn't exist
-                if "selected_class" not in st.session_state:
-                    reset_state()
-                x, y, x2, y2 = get_bounding_box(canvas_result, bg_image)
-                col1, col2 = st.columns(2)
-                if col1.button("Object Located"):
-                    st.session_state.selected_class = 'class_b'
-                if col2.button("No Object"):
-                    st.session_state.selected_class = 'class_a'
+try:
+    st.set_page_config(page_title="Image Annotator", layout='wide')
+    st.title('Image Annotator')
+    bg_image = st.file_uploader("Background image:", type=["png", "jpg"])
+    # print(bg_image)
+    if bg_image:
+        image_pil = Image.open(bg_image)
+        img_np = np.array(image_pil)
+        canvas_result = draw_canvas(bg_image)
+        # Do something interesting with the image data and paths
+        if canvas_result.json_data and canvas_result.json_data.get('objects'):
+            # Initialize session state if it doesn't exist
+            if "selected_class" not in st.session_state:
+                reset_state()
+            x, y, x2, y2 = get_bounding_box(canvas_result, bg_image)
+            col1, col2 = st.columns(2)
+            if col1.button("Object Located"):
+                st.session_state.selected_class = 'class_b'
+            if col2.button("No Object"):
+                st.session_state.selected_class = 'class_a'
 
-                if st.session_state.selected_class:
-                    st.session_state.save_label_button = st.button('Save Label')
-                    if st.session_state.save_label_button:
-                        save_label(img_np, x, y, x2, y2, label=st.session_state.selected_class)
-                        reset_state()
-    except Exception as e:
-        print(e)
-        st.write(e)
+            if st.session_state.selected_class:
+                st.session_state.save_label_button = st.button('Save Label')
+                if st.session_state.save_label_button:
+                    save_label(img_np, x, y, x2, y2, label=st.session_state.selected_class)
+                    reset_state()
+except Exception as e:
+    print(e)
+    st.write(e)
