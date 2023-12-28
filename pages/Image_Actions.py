@@ -2,7 +2,6 @@ import streamlit as st
 from tempfile import TemporaryDirectory
 import os
 import time
-
 from common.images import trim_borders, vertical_split, combo_trim_split
 
 FUNC_MAP = {
@@ -25,37 +24,30 @@ def image_file_uploads(key):
     return image_files, output_path
 
 
-# def disable_submit():
-#     st.session_state.submit_disabled = True
+st.set_page_config(page_title="Image actions", layout='wide')
+st.title('Image actions')
 
-
-def main():
-    st.set_page_config(page_title="Image actions", layout='wide')
-    st.title('Image actions')
-
-    action = st.radio("Choose the action you want", ['Trim Borders', 'Vertical Split', 'Trim & Split Combo'],
-                      index=None, horizontal=True, key='action_radio')
-
-    # if 'submit_disabled' not in st.session_state:
-    #     st.session_state.submit_disabled = False
-
-    if st.session_state.action_radio:
-        action = action.lower().replace(" ", "_")
-        files, output_path = image_file_uploads(action)
-        if files and output_path:
-            do_action = st.button('Submit', key=f'{action}_submit')
+action = st.radio("Choose an action", ['Trim Borders', 'Vertical Split', 'Trim & Split Combo'], index=None,
+                  horizontal=True, key='action_radio')
+images_to_display = []
+captions = []
+if st.session_state.action_radio:
+    action = action.lower().replace(" ", "_")
+    files, output_path = image_file_uploads(action)
+    if files and output_path:
+        submitted = st.button('Submit', key=f'{action}_submit')
+        if submitted:
             for file in files:
                 _, file_ext = os.path.splitext(file.name)
-                if do_action:
-                    with TemporaryDirectory() as temp_dir:
-                        temp_file_name = file.name
-                        temp_file_path = os.path.join(temp_dir, temp_file_name)
-                        save_uploaded_file(temp_dir, file)
-                        FUNC_MAP[action](temp_file_path, output_path, None)
-
-        # st.rerun()  #TODO add st.empty() for showing the images
-
-
-if __name__ == '__main__':
-    main()
-
+                with TemporaryDirectory() as temp_dir:
+                    temp_file_path = os.path.join(temp_dir, file.name)
+                    save_uploaded_file(temp_dir, file)
+                    FUNC_MAP[action](temp_file_path, output_path, None)
+                if action == 'trim_borders':
+                    images_to_display.append(os.path.join(output_path, file.name))
+                    captions.append(file.name)
+                else:
+                    images_to_display.extend([os.path.join(output_path, f'{_}-0{file_ext}'),
+                                              os.path.join(output_path, f'{_}-1{file_ext}')])
+                    captions.extend([f'{_}-0{file_ext}', f'{_}-0{file_ext}'])
+            st.image(images_to_display, caption=captions, use_column_width=True)
