@@ -1,18 +1,24 @@
 import subprocess
+import os
 
 
-def prepare_stereo_image(img_path):
-    trim_borders(img_path)
-    vertical_split(img_path)
+def combo_trim_split(img, output_path, in_place=None):
+    trim_borders(img, output_path)
+    img = os.path.join(output_path, os.path.basename(img))
+    vertical_split(img, output_path, True)
 
 
-def vertical_split(img_path):  # TODO should I put these functions inside Image class?
-    command = f'mogrify -crop 50%x100% +repage {img_path}'
-    result = subprocess.run(command.split(' '), stdout=subprocess.PIPE, text=True)
-    return result
-
-
-def trim_borders(img_path):  # TODO should I put these functions inside Image class?
-    command = f'mogrify -fuzz 20% -trim {img_path}'
+def trim_borders(img, output_path, in_place=None):
+    command = f'mogrify -fuzz 20% -trim -path {output_path} {img}'
     subprocess.run(command.split(' '), stdout=subprocess.PIPE, text=True)
     return
+
+
+def vertical_split(img, output_path, in_place=False):
+    in_place = '' if in_place else f'-path {output_path} '
+    command = f'mogrify -crop 50%x100% +repage {in_place}{img}'
+    subprocess.run(command.split(' '), stdout=subprocess.PIPE, text=True)
+    return
+
+
+
