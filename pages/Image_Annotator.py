@@ -44,7 +44,7 @@ def get_bounding_box(canvas_result, bg_image):
 
 def save_label(img, x, y, x2, y2, label):
     # Count the number of files
-    num_files = int((len(os.listdir(f'../data/labeled_data/')) / 2) + 1)
+    num_files = int((len(os.listdir(f'./data/labeled_data/')) / 2) + 1)
     file_name = f'{label}_{num_files}'
     f = open(f'./data/labeled_data/{file_name}.bb', 'w')
     f.write(f"{x}_{y}_{x2}_{y2}")
