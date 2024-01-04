@@ -1,14 +1,13 @@
 import streamlit as st
 from tempfile import TemporaryDirectory
 import os
-import time
 from common.images import trim_borders, vertical_split, combo_trim_split
 
 FUNC_MAP = {
-        'trim_borders': trim_borders,
-        'vertical_split': vertical_split,
-        'trim_&_split_combo': combo_trim_split
-    }
+    'trim_borders': trim_borders,
+    'vertical_split': vertical_split,
+    'trim_&_split_combo': combo_trim_split
+}
 
 
 def save_uploaded_file(temp_dir, uploaded_file):

@@ -5,40 +5,12 @@ import cv2
 from stqdm import stqdm
 import pandas as pd
 
-
-class Image:
-    def __init__(self, path, params=None):
-        self.path = path
-        self.img = self.read_img_gray()
-        self.keypoints, self.descriptors = self.get_keypoints_and_descriptors(params)
-        self.matches = []
-
-    def read_img(self):
-        return cv2.imread(self.path)
-
-    def read_img_gray(self):
-        img = self.read_img()
-        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    @staticmethod
-    def create_sift(params):
-        if params:
-            return cv2.SIFT_create(**params)
-        return cv2.SIFT_create()
-
-    def get_keypoints_and_descriptors(self, params=None):
-        sift = self.create_sift(params)
-        return sift.detectAndCompute(self.img, None)
-
-    def show_img(self):
-        cv2.imshow('image', self.img)
-        cv2.waitKey(0)
+from pyscripts.my_image import MyImage
 
 
 class StereoSplitter:
-    def __init__(self, img: Image):
+    def __init__(self, img: MyImage):
         self.matcher = cv2.BFMatcher_create()
-        # self.matcher = cv2.FlannBasedMatcher_create()
         self.img = img
 
     def is_stereo_image(self):
@@ -58,7 +30,7 @@ class StereoSplitter:
 
 
 def run_image(image_path):
-    image_obj = Image(image_path, params=None)
+    image_obj = MyImage(image_path)
     stereo_splitter = StereoSplitter(image_obj)
     image_inner_matches = stereo_splitter.is_stereo_image()
     if len(image_inner_matches) > 410:
@@ -70,7 +42,7 @@ def detect(path):
     y_pred = []
     if os.path.isdir(path):
         image_list = glob.glob(os.path.join(path, '*'))
-        for image_path in stqdm(image_list, backend=False, frontend=True):
+        for image_path in stqdm(image_list):
             stereo = run_image(image_path)
             if stereo:
                 y_pred.append(image_path)
