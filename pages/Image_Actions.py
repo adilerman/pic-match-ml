@@ -13,7 +13,6 @@ FUNC_MAP = {
 def save_uploaded_file(temp_dir, uploaded_file):
     with open(os.path.join(temp_dir, uploaded_file.name), "wb") as f:
         f.write(uploaded_file.getbuffer())
-    return st.success(f'Saved results in output folder')
 
 
 def image_file_uploads(key):
@@ -49,4 +48,6 @@ if st.session_state.action_radio:
                     images_to_display.extend([os.path.join(output_path, f'{_}-0{file_ext}'),
                                               os.path.join(output_path, f'{_}-1{file_ext}')])
                     captions.extend([f'{_}-0{file_ext}', f'{_}-0{file_ext}'])
-            st.image(images_to_display, caption=captions, use_column_width=True)
+            st.success(f'Saved results in output folder')
+            if len(files) <= 2:
+                st.image(images_to_display, caption=captions, use_column_width=True)
