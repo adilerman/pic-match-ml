@@ -50,7 +50,7 @@ if st.session_state.action_radio:
                 else:
                     images_to_display.extend([os.path.join(output_path, f'{_}-0{file_ext}'),
                                               os.path.join(output_path, f'{_}-1{file_ext}')])
-                    captions.extend([f'{_}-0{file_ext}', f'{_}-0{file_ext}'])
+                    captions.extend([f'{_}-0{file_ext}', f'{_}-1{file_ext}'])
             st.success(f'Saved results in output folder')
             if len(files) <= 2:
-                st.image(images_to_display, caption=captions, use_column_width=True)
+                st.image(images_to_display, caption=captions, use_column_width='auto')
