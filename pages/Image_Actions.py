@@ -29,7 +29,15 @@ action = st.radio("Choose an action", ['Trim Borders', 'Vertical Split', 'Trim &
 images_to_display = []
 captions = []
 working_dir = os.getcwd()
+image_vars = {}
 if st.session_state.action_radio:
+    if action == 'Trim Borders':
+        image_vars['fuzz'] = st.slider('How much fuzz?', 0, 100, 20)
+    elif action == 'Vertical Split':
+        image_vars['split'] = st.slider('Where to split?', 0, 100, 50)
+    else:
+        image_vars['fuzz'] = st.slider('How much fuzz?', 0, 100, 20)
+        image_vars['split'] = st.slider('Where to split?', 0, 100, 50)
     action = action.lower().replace(" ", "_")
     files = image_file_uploads(action)
     if files:
@@ -40,7 +48,7 @@ if st.session_state.action_radio:
                 with TemporaryDirectory() as temp_dir:
                     temp_file_path = os.path.join(temp_dir, file.name)
                     save_uploaded_file(temp_dir, file)
-                    FUNC_MAP[action](temp_file_path, working_dir, None)
+                    FUNC_MAP[action](temp_file_path, working_dir, image_vars, None)
                 if action == 'trim_borders':
                     images_to_display.append(os.path.join(working_dir, file.name))
                     captions.append(file.name)
