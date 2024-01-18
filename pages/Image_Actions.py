@@ -18,8 +18,7 @@ def save_uploaded_file(temp_dir, uploaded_file):
 def image_file_uploads(key):
     image_files = st.file_uploader("Upload Images", type=["jpg", "jpeg", "png"], accept_multiple_files=True,
                                    key=f'{key}_file_upload')
-    output_path = st.text_input("Enter output path for images", key=f'{key}_output_path', value=None)
-    return image_files, output_path
+    return image_files
 
 
 st.set_page_config(page_title="Image actions", layout='wide')
@@ -29,10 +28,11 @@ action = st.radio("Choose an action", ['Trim Borders', 'Vertical Split', 'Trim &
                   horizontal=True, key='action_radio')
 images_to_display = []
 captions = []
+working_dir = os.getcwd()
 if st.session_state.action_radio:
     action = action.lower().replace(" ", "_")
-    files, output_path = image_file_uploads(action)
-    if files and output_path:
+    files = image_file_uploads(action)
+    if files:
         submitted = st.button('Submit', key=f'{action}_submit')
         if submitted:
             for file in files:
@@ -40,13 +40,13 @@ if st.session_state.action_radio:
                 with TemporaryDirectory() as temp_dir:
                     temp_file_path = os.path.join(temp_dir, file.name)
                     save_uploaded_file(temp_dir, file)
-                    FUNC_MAP[action](temp_file_path, output_path, None)
+                    FUNC_MAP[action](temp_file_path, working_dir, None)
                 if action == 'trim_borders':
-                    images_to_display.append(os.path.join(output_path, file.name))
+                    images_to_display.append(os.path.join(working_dir, file.name))
                     captions.append(file.name)
                 else:
-                    images_to_display.extend([os.path.join(output_path, f'{_}-0{file_ext}'),
-                                              os.path.join(output_path, f'{_}-1{file_ext}')])
+                    images_to_display.extend([os.path.join(working_dir, f'{_}-0{file_ext}'),
+                                              os.path.join(working_dir, f'{_}-1{file_ext}')])
                     captions.extend([f'{_}-0{file_ext}', f'{_}-0{file_ext}'])
             st.success(f'Saved results in output folder')
             if len(files) <= 2:
