@@ -54,7 +54,8 @@ def detect(path):
 
 st.set_page_config(page_title="Stereo Images Detector", layout='wide')
 st.title('Stereo Images Detector')
-path = st.text_input("Enter images folder path", key=f'stereo_detector_output_path')
+path = st.text_input("Enter images folder path", key=f'stereo_detector_output_path',
+                     value='/Users/shayarbiv/PycharmProjects/pic-match-ml/data/demo/stereo_detector')
 if path:
     submit_clicked = st.button('Submit', on_click=detect, kwargs={'path': path})
     if submit_clicked:

@@ -26,6 +26,6 @@ if len(images) == 2:
         base64_url2 = numpy_to_base64_url(mask2)
         with st.spinner('In Progress'):
             depth_map = get_depth_map_from_api(base64_url1, base64_url2)
-            st.image(depth_map, caption='Depth map', use_column_width=True)
+            st.image(depth_map, caption='Depth map', use_column_width=True, width=800)
 
 
